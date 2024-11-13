@@ -1,7 +1,7 @@
 "use client"
 import Pay1 from '@/assets/Rectangle 1.png'
 import Pay2 from '@/assets/Photo.png'
-import { FormEventHandler, SetStateAction, useState } from 'react'
+import { FormEvent, FormEventHandler, SetStateAction, useState } from 'react'
 type method = {
     img: any,
     title: string
@@ -30,7 +30,7 @@ const PaymentMethods = () => {
         img: Pay2,
         title: "Visa - MasterCard"
     }]
-    const handelSubmitForm = (e) => {
+    const handelSubmitForm = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
 
