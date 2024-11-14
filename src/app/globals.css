@@ -6,6 +6,10 @@
   font-family: abc;
   src: url(../assets/OpenSans-Regular.ttf);
 }
+@font-face {
+  font-family: cde;
+  src: url(./fonts/big_noodle_titling_oblique.ttf);
+}
 
 body {
   background-color: #f5f5f5;

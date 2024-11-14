@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Inter } from 'next/font/google'
-const openSans = Inter({
+import { Cairo } from 'next/font/google'
+const openSans = Cairo({
   weight: "400",
   subsets: ["latin"],
   display: 'swap',
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
 
       <body
-      // className={openSans.className}
+      className={openSans.className}
       >
         {children}
       </body>

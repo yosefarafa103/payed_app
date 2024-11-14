@@ -22,7 +22,7 @@ const FirstPage = () => {
                     <span className="size-[30px] text-[20px] flex items-center justify-center bg-[#eee] rounded-[8px]">
                         <IoMdPricetag />
                     </span>
-                    <h4 className="text-[14px]">مبلغ الفاتورة: 5 KWD</h4>
+                    <h4 className="text-[14px]">مبلغ الفاتورة: 5 $</h4>
                 </div>
                 <div className="flex items-center font-semibold mt-[15px]  gap-2">
                     <span className="size-[30px] text-[20px] flex items-center justify-center bg-[#eee] rounded-[8px]">

@@ -1,7 +1,9 @@
 "use client"
 import Pay1 from '@/assets/Rectangle 1.png'
 import Pay2 from '@/assets/Photo.png'
-import { FormEvent, FormEventHandler, SetStateAction, useState } from 'react'
+import { FormEvent, SetStateAction, useEffect, useRef, useState } from 'react'
+import ErrorValidationInputs from './ErrorValidationInputs'
+
 type method = {
     img: any,
     title: string
@@ -11,12 +13,25 @@ type t2 = {
     year: string
 }
 const PaymentMethods = () => {
+    const ref1: any = useRef(null)
+    const ref2: any = useRef(null)
     const [idx, setIdx] = useState(0)
+
+    const [isValidCardName, setIsValidCardName] = useState<Boolean | null>(null);
+    const [isValidCardNumber, setIsValidCardNumber] = useState<Boolean | null>(null);
     const [cardName, setCardName] = useState("");
     const [cardNumber, setCardNumber] = useState('');
-    const [expiresYear, setExpiresYear] = useState<SetStateAction<string>>();
-    const [expiresMonth, setExpiresMonth] = useState<SetStateAction<string>>();
+    const [expiresYear, setExpiresYear] = useState<SetStateAction<string>>('');
+    const [expiresMonth, setExpiresMonth] = useState<SetStateAction<string>>("");
     const [pass, setPass] = useState("");
+    useEffect(() => {
+        if (expiresMonth?.length > 1) {
+            ref1?.current.focus()
+        }
+        if (expiresYear?.length > 1) {
+            ref2?.current.focus()
+        }
+    }, [expiresMonth, expiresYear])
     if (Number(expiresYear) < 2018 || Number(expiresMonth) > 12) {
         console.log("invalid Date!");
     } else {
@@ -55,28 +70,55 @@ const PaymentMethods = () => {
                 <section>
                     <h3 className="font-bold mt-[15px] text-[16px]">اسم حامل البطاقة</h3>
                     <div className='mt-[5px]'>
-                        <input onChange={(e) => setCardName(e.target.value)} maxLength={14} required type="text" className='w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="Ahmed M KAMAL" />
+                        <input onBlur={() => cardName.length === 0 ? setIsValidCardName(false) : setIsValidCardName(null)} onChange={(e) => {
+                            // cardName.length === 0 ? setIsValidCardName(false) : setIsValidCardName(null)
+                            if (cardName.length === 0) {
+                                setIsValidCardName(false)
+                            } else {
+                                setIsValidCardName(null)
+                            }
+                            setCardName(e.target.value)
+                        }} maxLength={14} required type="text" className={`w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${isValidCardName === false ? "border-red-600 focus:border-red-600" : ""}`} placeholder="Ahmed M KAMAL" />
                     </div>
+                    {isValidCardName === false ?
+                        // <span className='font-bold text-red-500'>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? "".toUpperCase() : ""}</span>
+                        <ErrorValidationInputs message={"ادخل اسمك الموجود علي بطاقة ائتمانك"} />
+                        : null
+                    }
                 </section>
                 <section>
                     <h3 className="font-bold mt-[15px] text-[16px]">رقم البطاقة</h3>
                     <div className='mt-[5px]'>
-                        <input required onChange={(e) => setCardNumber(e.target.value)} maxLength={14} type="text" className='w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="7584 4894 4875 4844 3209" />
+                        <input onBlur={() => cardNumber.length < 14 ? setIsValidCardNumber(false) : setIsValidCardNumber(null)} required onChange={(e) => {
+                            if (cardNumber.length < 14) {
+                                setIsValidCardNumber(false)
+                            } else {
+                                setIsValidCardNumber(null)
+                            }
+                            setCardNumber(e.target.value)
+                        }} maxLength={14} type="text" className={`w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${(isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0) ? "border-red-600 focus:border-red-600" : "border-transparent"}`} placeholder="7584 4894 4875 4844 3209" />
                     </div>
+                    {isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0 ?
+                        <ErrorValidationInputs message={"ادخل رقم البطاقة الائتمانية المكون من 14 رقم"} />
+                        // <span className='font-bold text-red-500'>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? .toUpperCase() : ""}</span>
+                        : null
+                    }
                 </section>
                 <section className='flex sm:items-center justify-between '>
                     <section>
                         <h3 className="font-bold mt-[15px] text-[16px]">تاريخ انتهاء البطاقة</h3>
                         <div className='mt-[5px] flex items-center rounded-[6px] p-[10px] bg-[#f9f9f9] gap-2 max-sm:w-fit'>
-                            <input onChange={(e) => setExpiresMonth(e.target.value)} required maxLength={2} type="text" className='w-[40px] transition-all duration-[300ms] bg-[#f9f9f9]  outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm  px-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="8" />/
-                            <input onChange={(e) => setExpiresYear(e.target.value)} required maxLength={4} type="text" className='w-[80px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="2025" />
+                            <input onChange={(e) => {
+                                setExpiresMonth(e.target.value)
+                            }} required maxLength={2} type="text" className='w-[40px] transition-all duration-[300ms] bg-[#f9f9f9]  outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm  font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="08" />/
+                            <input ref={ref1} onChange={(e) => setExpiresYear(e.target.value)} required maxLength={2} type="text" className='w-[80px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="25" />
                         </div>
-                        <span className='font-bold text-red-500 '>{(Number(expiresYear) < 2018 || Number(expiresMonth) > 12) ? "برجاء ادخال تاريخ صحيح!".toUpperCase() : ""}</span>
+                        <span className='font-bold text-red-500 '>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? "برجاء ادخال تاريخ صحيح!".toUpperCase() : ""}</span>
                     </section>
                     <section>
                         <h3 className="font-bold mt-[15px] text-[16px]">الرقم السري</h3>
                         <div className='mt-[5px]'>
-                            <input required maxLength={3} type="password" className='w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="◾◾◾" />
+                            <input ref={ref2} required maxLength={3} type="password" className='w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="◾◾◾" />
                         </div>
                     </section>
                 </section>
