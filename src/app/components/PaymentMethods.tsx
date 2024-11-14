@@ -113,7 +113,12 @@ const PaymentMethods = () => {
                             }} required maxLength={2} type="text" className='w-[40px] transition-all duration-[300ms] bg-[#f9f9f9]  outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm  font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="08" />/
                             <input ref={ref1} onChange={(e) => setExpiresYear(e.target.value)} required maxLength={2} type="text" className='w-[80px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444]' placeholder="25" />
                         </div>
-                        <span className='font-bold text-red-500 '>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? "برجاء ادخال تاريخ صحيح!".toUpperCase() : ""}</span>
+                        {
+                            (expiresYear.length === 2 && expiresMonth.length === 2) ?
+                                Number(expiresYear) < 18 || Number(expiresMonth) > 12 ?
+
+                                    <span className='font-bold text-red-500 '>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? "برجاء ادخال تاريخ صحيح!".toUpperCase() : ""}</span> : "" : ''
+                        }
                     </section>
                     <section>
                         <h3 className="font-bold mt-[15px] text-[16px]">الرقم السري</h3>
