@@ -27,14 +27,10 @@ const OTP = () => {
                 <h4 className='mt-[25px] sm:text-[22px] text-center font-bold'>
                     ادخل رمز التحقق الذي يصلك في رسالة نصية والمكون من 6 أرقام او انتظر مكالمة البنك لتأكيد عملية الدفع
                 </h4>
-                <section ref={input1} className='flex items-center justify-center gap-2 mt-[25px]'>
+                <section className='flex items-center justify-center gap-2 mt-[25px]'>
                     {[1, 2, 3, 4, 5, 6].map((el, i) => (
                         <div className='size-[45px] flex items-center px-[10px] justify-center p-[20px] relative '>
-                            <input onChange={(e) => {
-                                console.log(input1?.current.children.length);
-                                console.log(input1?.current.children[i + 1]);
-
-                            }} maxLength={1} type="text" disabled={i === ((input1?.current?.children.length) - 1) ? true : false} className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
+                            <input maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
                         </div>
                     ))}
                 </section>
