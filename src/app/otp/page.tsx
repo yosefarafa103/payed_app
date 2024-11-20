@@ -35,15 +35,21 @@ const OTP = () => {
     const p1 = /^(.)\1*$/g;
     // (?=(\d))(?!.*\1(?!\1))
     const p2 = /^\d*(?:123|234|345|456|567|678|789|890|012)+\d*$/g;
-    const handelSub = (e: MouseEventHandler<HTMLButtonElement>) => {
+    const handelSub = (e: any): any => {
         e.preventDefault()
-        if ([input1, input2, input3, input4, input5, input6].every(item => item?.current.value.length !== 0)) {
-            setTimeout(() => {
-                setIsSuccess(true)
-                // location.assign('/')
-            }, 500);
+        if ([input1, input2, input3, input4, input5, input6].every(item => {
+            if (item.current && item.current.value.length !== 0) {
+
+                setTimeout(() => {
+                    setIsSuccess(true)
+                    // location.assign('/')
+                }, 500);
+            }
+        })) {
         }
     }
+    console.log(isSucssess);
+
     useGSAP(() => {
         if (isSucssess) {
             gsap.to('.box input', {
