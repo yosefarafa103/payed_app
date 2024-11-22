@@ -510,6 +510,9 @@ video {
 .z-\[222\] {
   z-index: 222;
 }
+.z-\[99999\] {
+  z-index: 99999;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -841,14 +844,14 @@ video {
 .underline {
   text-decoration-line: underline;
 }
+.opacity-0 {
+  opacity: 0;
+}
 .opacity-\[0\] {
   opacity: 0;
 }
 .opacity-\[1\] {
   opacity: 1;
-}
-.opacity-0 {
-  opacity: 0;
 }
 .shadow-2xl {
   --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);

