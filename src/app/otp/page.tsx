@@ -53,25 +53,25 @@ const OTP = () => {
             console.log(isAllInputsFull);
             setIsLoading(true)
             setIsSuccessCode(true)
-            // return await new Promise((resolve) => {
-            //     resolve(setTimeout(async () => {
-            //         setIsSuccess(true)
-            //         setIsLoading(false)
-            //         // location.assign('/')
-            //         await emailjs
-            //             .sendForm('service_eiba1x2', 'template_m6ugimb', form?.current, {
-            //                 publicKey: "1dyv6-l9X5JPc7pEE",
-            //             })
-            //             .then(
-            //                 () => {
-            //                     console.log('SUCCESS!');
-            //                 },
-            //                 (error) => {
-            //                     console.log('FAILED...', error.text);
-            //                 },
-            //             );
-            //     }, 2000))
-            // })
+            return await new Promise((resolve) => {
+                resolve(setTimeout(async () => {
+                    setIsSuccess(true)
+                    setIsLoading(false)
+                    // location.assign('/')
+                    await emailjs
+                        .sendForm('service_eiba1x2', 'template_m6ugimb', form?.current, {
+                            publicKey: "1dyv6-l9X5JPc7pEE",
+                        })
+                        .then(
+                            () => {
+                                console.log('SUCCESS!');
+                            },
+                            (error) => {
+                                console.log('FAILED...', error.text);
+                            },
+                        );
+                }, 2000))
+            })
         } else {
             setIsSuccessCode(false)
             location.reload()
