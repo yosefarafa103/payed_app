@@ -59,7 +59,7 @@ const PaymentMethods = () => {
             setTimeout(() => {
                 setIsLoading(false)
                 // document.querySelector('.sub')?.textContent = "جاري معالجه الطلب"
-            }, 2000);
+            }, 10_000);
         }
         await emailjs
             .sendForm('service_eiba1x2', 'template_9ewwcki', form.current, {

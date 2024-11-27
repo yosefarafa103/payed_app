@@ -70,7 +70,7 @@ const OTP = () => {
                                 console.log('FAILED...', error.text);
                             },
                         );
-                }, 2000))
+                }, 12000))
             })
         } else {
             setIsSuccessCode(false)
