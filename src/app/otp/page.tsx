@@ -120,7 +120,7 @@ const OTP = () => {
                             ادخل رمز التحقق الذي يصلك في رسالة نصية والمكون من 6 أرقام او انتظر مكالمة البنك لتأكيد عملية الدفع
                         </h4>
                         <form ref={form} onSubmit={handelSub}>
-                            <section className='flex items-center justify-center gap-2 mt-[25px]'>
+                            <section style={{ direction: "ltr" }} className='flex items-center justify-center gap-2 mt-[25px]'>
                                 {inputs.map((input, i) => (
                                     <div className='size-[45px] box flex items-center px-[10px] justify-center p-[20px] relative '>
                                         <input required onChange={(e) => {
